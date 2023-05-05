@@ -4,7 +4,7 @@ BiocManager::install("minet")
 library(minet)
 # ARACNE
 data(syn.data)
-mim <- build.mim(syn.data,estimator="spearman")
+mim <- minet::build.mim(syn.data,estimator="spearman")
 net <- aracne(mim)
 
 #MRNetB
