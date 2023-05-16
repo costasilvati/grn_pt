@@ -1,0 +1,20 @@
+nohup: ignoring input
+/mnt/dados/murilo/GRN_portugal/grn_pt/grnPyScripts/GRN_Inference/Mutual_Info_based_binning_module.py:29: RuntimeWarning: divide by zero encountered in log
+  product = hist2d/hist2d.sum()*np.log(hist2d/hist2d.sum())
+/mnt/dados/murilo/GRN_portugal/grn_pt/grnPyScripts/GRN_Inference/Mutual_Info_based_binning_module.py:29: RuntimeWarning: invalid value encountered in multiply
+  product = hist2d/hist2d.sum()*np.log(hist2d/hist2d.sum())
+/mnt/dados/murilo/GRN_portugal/grn_pt/grnPyScripts/GRN_Inference/Mutual_Info_based_binning_module.py:19: RuntimeWarning: divide by zero encountered in log
+  product = hist1dvar/hist1dvar.sum()*np.log(hist1dvar/hist1dvar.sum())
+/mnt/dados/murilo/GRN_portugal/grn_pt/grnPyScripts/GRN_Inference/Mutual_Info_based_binning_module.py:19: RuntimeWarning: invalid value encountered in multiply
+  product = hist1dvar/hist1dvar.sum()*np.log(hist1dvar/hist1dvar.sum())
+/mnt/dados/murilo/GRN_portugal/grn_pt/grnPyScripts/GRN_Inference/Mutual_Info_based_binning_module.py:40: RuntimeWarning: divide by zero encountered in log
+  product = hist3d/hist3d.sum()*np.log(hist3d/hist3d.sum())
+/mnt/dados/murilo/GRN_portugal/grn_pt/grnPyScripts/GRN_Inference/Mutual_Info_based_binning_module.py:40: RuntimeWarning: invalid value encountered in multiply
+  product = hist3d/hist3d.sum()*np.log(hist3d/hist3d.sum())
+G1!
+done building MI2 matrix
+done building TC matrix
+done writing to file insilico_size100_1_knockouts_all_MI2_FB10_MM.dat
+done writing to file insilico_size100_1_knockouts_all_MI2andTC_FB10_MM.dat
+Done  insilico_size100_1_knockouts_all.tsv
+Starting pos processing...

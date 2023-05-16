@@ -111,7 +111,10 @@ Args = ap.parse_args()
 
 # read in data as csv file
 assert Args.data_file is not None, 'please provide data file'
-data = pd.read_csv(Args.data_file, index_col=0)
+if Args.data_file[-4:] == '.tsv':
+    data = pd.read_csv(Args.data_file,index_col=0,sep='\t')
+else:
+    data = pd.read_csv(Args.data_file, index_col=0)
 n_data = data.shape[0]
 n_species = data.shape[1]
 
@@ -199,8 +202,15 @@ subprocess.call([str(executable),
                  str(Args.MItype),
                  str(Args.numthreads)])
 
-    
-
+print([str(executable),
+                 str(temp_file_data),
+                 str(n_species),
+                 str(Args.taumax),
+                 str(Args.ert_crit),
+                 str(Args.q),
+                 str(Args.threshold),
+                 str(Args.MItype),
+                 str(Args.numthreads)])
 #################################################################### move generated files to designated sub-folder
 
 # create output folder if needed
@@ -213,7 +223,7 @@ if not os.path.exists(folder):
 shutil.copy(Args.data_file, folder + Args.data_file.split('/')[-1])
 shutil.copy(file_name, folder + file_name + '.txt')
 shutil.copy('conmat.txt', folder + file_name + '_conmat.txt')
-shutil.copy('./results/out_' + file_name + '_H1.txt', folder + 'out_' + file_name + '_H1.txt')
+shutil.copy('./results/out_' + file_name + '_H1.txt', folder + 'out_' + file_name + '_H1.txt') #out_
 shutil.copy('./results/out_' + file_name + '_H2.txt', folder + 'out_' + file_name + '_H2.txt')
 shutil.copy('./results/out_' + file_name + '_MIl_MI_MIm_MIs.txt', folder + 'out_' + file_name + '_MIl_MI_MIm_MIs.txt')
 shutil.copy('./results/out_' + file_name + '_T.txt', folder + 'out_' + file_name + '_T.txt')
