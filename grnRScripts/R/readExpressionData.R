@@ -1,4 +1,4 @@
-readExpressionData <- function(path){
-  expData <- read.delim(path, sep = "\t", header = TRUE)
+readExpressionData <- function(path, demlimiterChar = "\t"){
+  expData <- read.delim(path, sep =  demlimiterChar, header = TRUE)
   return(expData)
 }

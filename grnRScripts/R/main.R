@@ -15,10 +15,16 @@ source("filterNetworkByTreshold.R")
 source("removeGeneGeneNode.R")
 library('bc3net')
 library('c3net')
+library('wrMisc')
 library(readr)
+library(dplyr)
 library(minet)
 library(ennet)
 library(netdiffuseR)
+library(tidyverse)
+library(tibble)
+
+#---------
 
 pathFile = "/Volumes/SD128/GRN_PT/DREAM5_NetworkInferenceChallenge_Data/Network3_Data/Network3_expression_data.tsv"
 pathFileTf = "/Volumes/SD128/GRN_PT/DREAM5_NetworkInferenceChallenge_Data/Network3_Data/Network3_transcription_factors.tsv"
@@ -31,54 +37,86 @@ expressionData <- read.delim(pathFile)
 expressionDataTransposto <- t(expressionData)
 # writeRData(expressionData, paste0(pathOut,"expressionDataTransposto.RData"))
 #----------- Inferindo e filtando redes --------------------------
-# ------ bc3net -------
+# ------ bc3net - MI qu-------
 netBc3 <- runBc3Net(expressionDataTransposto,
                     TRUE,
                     pathOut)
 # ------ bc3net - Calcula e filtra por quartil 4 ------------------------
-netBc3_filtred <- filterNetworkByTreshold(netBc3, 
-                                          TRUE, 
-                                          TRUE, 
-                                          "Bc3")
+netBc3treshold = quantileByData(netBc3)
+netBc3_edgeListQuantile <- edgeListByTreshold(netBc3, treshold = netBc3treshold)
+netBc3_edgeList <- edgeListByTreshold(netBc3, treshold = 0.01)
 # --- bc3net - Remove conexão gene - gene  --------------
-netBc3_filtred2 <- removeGeneGeneNode(goldStandardTranscFactor, 
-                                          netBc3_filtred, 
-                                          TRUE,
-                                          paste0(pathOut,"netBc3_"))
-# ------ C3net -------
+netBc3_edgeListTF <- removeGeneGeneNode(tfList, 
+                                        netBc3_edgeListQauntile,
+                                        TRUE,
+                                        paste0(pathOut,"netBc3_"))
+# ------ C3net - MI -------
 netC3 <- runC3net(expressionDataTransposto, 
                   TRUE, 
                   pathOut)
 # ------ C3net - Calcula e filtra por quartil 4 ------------------------
-netC3_filtred <- filterNetworkByTreshold(netC3, 
-                                         TRUE, 
-                                         TRUE, 
-                                         pathOut, 
-                                         "C3")
-# --- C3net - Remove conexão gene - gene  --------------
-netC3_filtred_2 <- removeGeneGeneNode(goldStandardTranscFactor, 
-                                      netC3_filtred,
-                                      TRUE,
-                                      paste0(pathOut,"netBc3_"))
-# -- executa CLR - não transposto
-netClr <- runClr(expressionData, TRUE, pathOut)
-netClr_filtred <- filterNetworkByTreshold(netCrl, TRUE, TRUE, pathOut, "Clr")
-# -- executa mrnet - não transposto
-netMrnet <- runMRnet(expressionData, TRUE, pathOut)
-netMrnet_filtred <- filterNetworkByTreshold(netMrnet, TRUE, TRUE, pathOut, "Mrnet")
-# -- executa MRNETB
-netMrnetB <- runMrnetB(expressionData, TRUE, pathOut)
-netMrnetB_filtred <- filterNetworkByTreshold(netMrnetB, TRUE, TRUE, pathOut, "MrnetB")
-# -- executa ENNET
-# ennetNet <- runEnnet(dream5Net3T,dream5Net3Tf, TRUE, pathOut)
+netC3Trshold <- quantileByData(netC3)
+netC3_edgeListQauntile <- edgeListByTreshold(netC3, treshold = netC3Trshold)
+netC3_edgeList <- edgeListByTreshold(netC3, treshold = 0.01)
 
+# --- C3net - Remove conexão gene - gene  --------------
+netC3_edgeListTF <- removeGeneGeneNode(tfList, 
+                                        netC3_edgeList,
+                                        TRUE,
+                                        paste0(pathOut,"netC3_"))
+# -- executa Aracne - transposto?
+netAracne <- runAracne(expressionData, TRUE, pathOut)
+netAracneTreshold <- quantileByData(netAracne)
+netAracne_edgeListQauntile <- edgeListByTreshold(netAracne, treshold = netAracneTreshold)
+netAracne_edgeList <- edgeListByTreshold(netAracne, treshold = 0.01)
+
+# -- executa CLR - não transposto
+netClr <- runClr(expressionData,  TRUE, pathOut)
+netClrTreshold <- quantileByData(netClr)
+netClr_edgeListQuantile <- edgeListByTreshold(netClr, treshold = netClrTreshold)
+netClr_edgeList <- edgeListByTreshold(netClr, treshold = 0.01)
+netClr_edgeListTF <- removeGeneGeneNode(tfList, 
+                                           netClr_edgeList,
+                                           TRUE,
+                                           paste0(pathOut,"netClr_"))
+#---------------------- GENIE3--------
+netGenie3 <- read.csv("/Users/julianacostasilva/Google\ Drive/.shortcut-targets-by-id/1aap66FUWBqx6ORLHbTivskehalbbaq8R/RNA-Seq\ Herbas/GRNs/resultsDream5Net3/GENIE3_predicted_original.csv")
+netGenie3_treshold <- quantileByData(netGenie3)
+netGenie3_edgeList <- edgeListByTreshold(netGenie3, treshold = 0.01)
+netGenie3_edgeListTF <- removeGeneGeneNode(tfList, 
+                                           netGenie3_edgeList,
+                                           TRUE,
+                                           paste0(pathOut,"netGenie3_"))
+
+# -- executa mrnet - não transposto
+netMrnet <- runMRnet(expressionData, 
+                     TRUE, 
+                     pathOut)
+netMrnetTreshold <- quantileByData(netMrnet)
+netMrnet_edgeListQuantile <- edgeListByTreshold(netMrnet, treshold = netMrnetTreshold)
+netMrnet_edgeList <- edgeListByTreshold(netMrnet, treshold = 0.01)
+netMrnet_edgeListTF <- removeGeneGeneNode(tfList, 
+                                        netMrnet_edgeList,
+                                        TRUE,
+                                        paste0(pathOut,"netMrnet_"))
+# -- executa MRNETB
+netMrnetB <- runMrnetB(expressionDataTransposto, TRUE, pathOut)
+netMrnetBTreshold <- quantileByData(netMrnetB)
+netMrnetB_edgeListQuantile <- edgeListByTreshold(netMrnetB,netMrnetBTreshold)
+netMrnetB_edgeList <- edgeListByTreshold(netMrnetB,0.01)
+netMrnetB_edgeListTF <- removeGeneGeneNode(tfList, 
+                                          netMrnetB_edgeList,
+                                          TRUE,
+                                          paste0(pathOut,"netMrnetB_"))
+#------- 
 goldStandardTranscFactor <- read.delim(pathFileTf)
-writeRData(expressionData, paste0(pathOut,
+writeRData(goldStandardTranscFactor, paste0(pathOut,
                                   "goldStandardTranscFactor.RData"))
 
 # ------ Lendo lista de nós Gold Standard e convertendo em matrix ---------------------
 goldStandard <- read.delim(pathFileGoldSt, 
                            header = FALSE) # edge list
+
 # -- create matriz to gold standard data
 goldSatndardMatrix <- matrix(data = 0, 
                              nrow = 4511, 
@@ -95,30 +133,7 @@ for (n1 in node1[,1]) {
   goldSatndardMatrix[n1,node2[line, 1]] <- edge[line, 1]
   line <- line +1
 }
+#------------ Compare net---------
 
-# Falta remover gene-gene
 
-
-#--------  Executa comparação com goldStandard ----------------
-netBc3_valid_gold <- minet::validate(netBc3_filtred, goldSatndardMatrix)
-writeRData(netBc3_valid_gold, paste0(pathOut,"Bc3_valid_gold.RData"))
-
-netC3_valid_gold <- minet::validate(netC3_filtred, goldSatndardMatrix)
-writeRData(netC3_valid_gold, paste0(pathOut,"C3_valid_gold.RData"))
-
-netClr_valid_gold <- minet::validate(netClr_filtred, goldSatndardMatrix)
-writeRData(netClr_valid_gold, paste0(pathOut, "Clr_valid_gold.RData"))
-
-netMrnet_valid_gold <- minet::validate(netMrnet_filtred, goldSatndardMatrix)
-writeRData(netMrnet_valid_gold, paste0(pathOut, "Mrnet_valid_gold.RData"))
-
-netMrnetB_valid_gold <- minet::validate(netMrnetB_filtred, goldSatndardMatrix)
-writeRData(netMrnetB_valid_gold, paste0(pathOut, "MrnetB_valid_gold.RData"))
-
-#--- PLOT
-max(fscores(netBc3_valid_gold))
-dev <- show.pr(netBc3_valid_gold, col="green", type="b")
-dev <- show.pr(netC3_valid_gold, device=dev, col="blue", type="b")
-show.pr(netClr_valid_gold, device=dev, col="red",type="b")
-auc.pr(netClr_valid_gold)
 
