@@ -1,8 +1,11 @@
 runClr <- function(dataExpression,writeCsv = FALSE, pathOut = "."){
-  netClr <- minet::minet(dataset = dataExpression, method = "clr")
+  mim <- minet::build.mim(dataExpression)
+  net <- minet::clr(mim)
   if(writeCsv){
-    fileName <- paste0(pathOut,"clr_predicted_original.csv")
-    writeNetworkCsv(netMinetClr, fileName)
+    #fileName <- paste0(pathOut,"clr_predicted_original.csv")
+    #writeNetworkCsv(net, fileName)
+    fileR = paste0(pathOut,"clr_predicted_original.RData")
+    writeRData(net, fileR)
   }
-  return(netClr)
+  return(net)
 }

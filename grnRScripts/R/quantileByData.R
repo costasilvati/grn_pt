@@ -1,6 +1,6 @@
-quantileByData <- function(net, quantile = '100%'){
+quantileByData <- function(net, quantil = '75%'){
   netSorted <- sort(net)
   treshold <- quantile(netSorted)
-  valueQuantile <- unname(treshold['100%']) # get value in named vector 
+  valueQuantile <- unname(treshold[quantil]) # get value in named vector 
   return(valueQuantile)
 }

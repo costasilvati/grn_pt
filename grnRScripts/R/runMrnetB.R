@@ -1,9 +1,11 @@
-runMrnetB <- function(dataExpression, writeCsv=FALSE, pathOut="."){
+runMrnetB <- function(dataExpression, write=FALSE, pathOut="."){
   mim <- minet::build.mim(dataExpression,estimator="spearman")
-  netMRNetB <- minet::mrnetb(mim)
-  if(writeCsv){
-    fileName <- paste0(pathOut,"mrnetB_predicted_original.csv")
-    writeNetworkCsv(netMRNetB, fileName)
+  net <- minet::mrnetb(mim)
+  if(write){
+    #fileR = paste0(pathOut,"mrnetB_predicted_original.RData")
+    #writeRData(net, fileR)
+    fileR = paste0(pathOut,"mrNetB_predicted_original.RData")
+    writeRData(net, fileR)
   }
-  return(netMRNetB)
+  return(net)
 }
