@@ -11,12 +11,14 @@ source("runMrnetB.R")
 source("inferenceNetwork.R")
 source("writeRData.R")
 source("writeNetworkCsv.R")
+source("inferenceNetwork.R")
 source("quantileByData.R")
 source("removeGeneGeneNode.R")
 source("edgeMatrixByTreshold.R")
-library('bc3net')
-library('c3net')
-library('wrMisc')
+library(bc3net)
+library(c3net)
+library(wrMisc)
+library(Matrix)
 library(readr)
 library(dplyr)
 library(minet)
@@ -36,49 +38,51 @@ pathOut = "/Volumes/SD128/GRN_PT/netDream5Net3/"
 #----------- Lendo os dados de expressão e goldStandard --------------------------
 expressionData <- read.delim(pathFile)
 writeRData(expressionData, paste0(pathOut,"expressionData.RData")) #
-# -- gera matriz transposta
-expressionDataTransposto <- t(expressionData)
-colnames(expressionDataTransposto) <- rep(1:length(row.names(expressionData)))
-writeRData(expressionData, paste0(pathOut,"expressionDataTransposto.RData"))
 tfList <- read_csv(pathFileTf, col_names = FALSE)
+#-------- Inferir redes 
+#networks <- inferenceNetwork(expressionData, TRUE, pathOut)
+#--------  ou importar RData
+load("/Volumes/SD128/GRN_PT/netDream5Net3/listAllNetworks_predicted_predicted.RData")
+networks <- data
+remove(data)
 
-networks <- inferenceNetork(expressionData, TRUE, pathOut)
-
-nomes <- names(networks)
+names_net <- names(networks)
 cont <- 1
 
 networks_filtred <- list(names(networks))
-networks_filtred_tf <- list(names(networks))
 
 for (net in networks) {
+  message(names_net[cont])
   thresholdNetwork <- quantileByData(net)
-  net_filtred <- edgeMatrixByTreshold(network=net, 
+  networks_filtred[[cont]] <- edgeMatrixByTreshold(network=net, 
                                       threshold= thresholdNetwork, 
                                       writeData = TRUE, 
-                                      pathOut = paste(pathOut, nomes[cont]))
-  networks_filtred[[cont]] <- net_filtred
-  networks_filtred_tf[[cont]] <- net_only_TfGene
+                                      pathOut = paste(pathOut, names_net[cont])
+                                      )
   cont <- cont + 1
 }
-names(networks_filtred) <- nomes
+names(networks_filtred) <- names_net 
+
+networks_filtred_tf <- list(names_net)
 
 cont2 <- 1
 for (netF in networks_filtred) {
-  message(nomes[cont2])
+  message(names_net[cont2])
   net_only_TfGene <- removeGeneGeneNode(tfList,
                                         netF,
                                         TRUE, 
-                                        paste0(pathOut,nomes[cont2]))
+                                        paste0(pathOut,names_net[cont2]))
   networks_filtred_tf[[cont2]] <- net_only_TfGene
   cont2 <- cont2 + 1
 }
-names(networks_filtred_tf) <- nomes
+names(networks_filtred_tf) <- names_net 
 remove(cont)
 remove(cont2)
-remove(nomes)
+remove(names_net
+       )
 remove(net)
 remove(netF)
-remove(net_filtred)
+remove(networks_filtred)
 remove(net_only_TfGene)
 
 

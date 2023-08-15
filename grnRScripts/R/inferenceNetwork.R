@@ -16,5 +16,15 @@ inferenceNetwork <- function(expressionData, writeData = FALSE, pathOut = "."){
   netMrnetB <- runMrnetB(expressionData, writeData, pathOut)
   networks <- list(netBc3, netC3, netAracne, netClr, netMrnet, netMrnetB)
   names(networks) <- c("netBc3", "netC3", "netAracne", "netClr", "netMrnet", "netMrnetB")
+  
+  if(writeData){
+    message("Writting data...")
+    fileName <- paste0(pathOut,"listAllNetworks_predicted.csv")
+    writeNetworkCsv(net, fileName)
+    fileR = paste0(pathOut,"listAllNetworks_predicted_predicted.RData")
+    writeRData(net, fileR)
+    remove(fileR)
+  }
+  remove(netBc3, netC3, netAracne, netClr, netMrnet, netMrnetB)
   return(networks)
 }

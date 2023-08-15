@@ -1,0 +1,24 @@
+netBc3
+22208 Node found before TF filter
+19132 Node found after TF filter
+Writting data...
+netC3
+7146 Node found before TF filter
+6364 Node found after TF filter
+Writting data...
+netAracne
+20498 Node found before TF filter
+17692 Node found after TF filter
+Writting data...
+netClr
+5087280 Node found before TF filter
+4416404 Node found after TF filter
+Writting data...
+netMrnet
+5087280 Node found before TF filter
+4460766 Node found after TF filter
+Writting data...
+netMrnetB
+5087280 Node found before TF filter
+4463766 Node found after TF filter
+Writting data...
