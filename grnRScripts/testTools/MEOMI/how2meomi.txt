@@ -1,0 +1,21 @@
+Instalar:
+
+sudo apt-get install libgdal-dev
+
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("Rgraphviz")
+BiocManager::install("minet")
+
+install.packages('vroom')
+install.packages('readr')
+install.packages('haven')
+install.packages('tidyverse')
+install.packages('sqldf')
+install.packages('pROC')
+install.packages('entropy')
+install.packages('terra')
+install.packages('modEvA')
+install.packages('reshape')
+install.packages('ROCR')
