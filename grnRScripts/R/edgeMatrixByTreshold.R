@@ -13,7 +13,7 @@ edgeMatrixByTreshold <- function(network, thresholdNet = 0.0, writeData = FALSE,
     #fileName <- paste0(pathOut,"aracne_predicted_original.csv")
     #writeNetworkCsv(net, fileName)
     fileR = paste0(pathOut,"threshold.RData")
-    writeRData(network, fileR)
+    writeRData(net2, fileR)
   }
   message(paste((sum(net2 == 1)),"Node found."))
   remove(net_df)

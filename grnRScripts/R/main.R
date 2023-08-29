@@ -42,38 +42,53 @@ tfList <- read_csv(pathFileTf, col_names = FALSE)
 #-------- Inferir redes 
 networks <- inferenceNetwork(expressionData, TRUE, pathOut)
 #--------  ou importar RData
-load("/Volumes/SD128/GRN_PT/netDream5Net3/listAllNetworks_predicted_predicted.RData")
-networks <- data
-remove(data)
+# load("/Volumes/SD128/GRN_PT/netDream5Net3/listAllNetworks_predicted_predicted.RData")
+# networks <- data
+# remove(data)
 
+# Filtrar pelo quartil 75%
+networks_filtred <- filterListNetwork(networks, TRUE, pathOut)
+
+# Gerar vários filtros
 names_net <- names(networks)
-cont <- 1
-
-networks_filtred <- list(names(networks))
-
+netThresolds <- list()
+netThresolds <- names(names_net)
+i <- 1
 for (net in networks) {
-  message(names_net[cont])
-  thresholdNetwork <- quantileByData(net)
-  networks_filtred[[cont]] <- edgeMatrixByTreshold(network=net, 
-                                      threshold= thresholdNetwork, 
-                                      writeData = TRUE, 
-                                      pathOut = paste(pathOut, names_net[cont])
-                                      )
-  cont <- cont + 1
+  minThreshold <- min(net)
+  maxThreshold <- max(net)
+  nameList <- names_net[i]
+  namesT <- NULL
+  t <- 1
+  tempList <- list()
+  while (minThreshold <= 2.0) {
+    message(paste(nameList,minThreshold))
+    tempList[paste0(nameList,minThreshold)] <- edgeMatrixByTreshold(net,minThreshold,writeData = TRUE)
+    minThreshold <- minThreshold + 0.1
+    t <- t+1
+  }
+  netThresolds[[nameList]] <- tempList
+  i <- i+1
 }
-names(networks_filtred) <- names_net 
+remove(i,t,tempList, minThreshold, maxThreshold, namesT)
+
 
 networks_filtred_tf <- list(names_net)
-
+cont <- 1
 cont2 <- 1
-for (netF in networks_filtred) {
-  message(names_net[cont2])
-  net_only_TfGene <- removeGeneGeneNode(tfList,
-                                        netF,
-                                        TRUE, 
-                                        paste0(pathOut,names_net[cont2]))
-  networks_filtred_tf[[cont2]] <- net_only_TfGene
-  cont2 <- cont2 + 1
+for (nets in netThresolds) {
+  message(names_net[cont])
+  netTemp <- list()
+  cont2 <- 1
+  for (netF in nets) {
+    netTemp[[cont2]] <- removeGeneGeneNode(tfList,
+                                          netF,
+                                          FALSE)
+    cont2 <- cont2 + 1
+  }
+  #netTemp <- names(nets)
+  networks_filtred_tf[[cont]] <- netTemp
+  cont <- cont + 1 
 }
 names(networks_filtred_tf) <- names_net 
 remove(cont)
