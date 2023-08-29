@@ -40,7 +40,7 @@ expressionData <- read.delim(pathFile)
 writeRData(expressionData, paste0(pathOut,"expressionData.RData")) #
 tfList <- read_csv(pathFileTf, col_names = FALSE)
 #-------- Inferir redes 
-#networks <- inferenceNetwork(expressionData, TRUE, pathOut)
+networks <- inferenceNetwork(expressionData, TRUE, pathOut)
 #--------  ou importar RData
 load("/Volumes/SD128/GRN_PT/netDream5Net3/listAllNetworks_predicted_predicted.RData")
 networks <- data
@@ -77,24 +77,12 @@ for (netF in networks_filtred) {
 }
 names(networks_filtred_tf) <- names_net 
 remove(cont)
-remove(cont2)
-remove(names_net
-       )
+remove(cont2) # 15:20
+remove(names_net)
 remove(net)
 remove(netF)
 remove(networks_filtred)
 remove(net_only_TfGene)
-
-
-#---------------------- GENIE3--------
-#netGenie3 <- read.csv("/Users/julianacostasilva/Google\ Drive/.shortcut-targets-by-id/1aap66FUWBqx6ORLHbTivskehalbbaq8R/RNA-Seq\ Herbas/GRNs/resultsDream5Net3/GENIE3_predicted_original.csv")
-#netGenie3_treshold <- quantileByData(netGenie3)
-#netGenie3_edgeList <- edgeListByTreshold(netGenie3, treshold = 0.01)
-#netGenie3_edgeListTF <- removeGeneGeneNode(tfList, 
-#                                           netGenie3_edgeList,
-#                                           TRUE,
-#                                           paste0(pathOut,"netGenie3_"))
-
 #------- 
 goldStandardTranscFactor <- read.delim(pathFileTf)
 writeRData(goldStandardTranscFactor, paste0(pathOut,
@@ -108,8 +96,8 @@ goldStandard <- read.delim(pathFileGoldSt,
 goldSatndardMatrix <- matrix(data = 0, 
                              nrow = 4511, 
                              ncol = 4511) # matrix
-row.names(goldSatndardMatrix) <- row.names(netBc3)
-colnames(goldSatndardMatrix) <- row.names(netBc3)
+row.names(goldSatndardMatrix) <- row.names(networks$netBc3)
+colnames(goldSatndardMatrix) <- row.names(networks$netBc3)
 # -- get node list
 node1 <- goldStandard[1]
 node2 <- goldStandard[2]
@@ -123,7 +111,17 @@ for (n1 in node1[,1]) {
 
 sum(goldSatndardMatrix == 1)
 sum(goldStandard == 1)
+remove(line, node1, node2, edge)
 #------------ Compare net---------
-
+confusion_matrix <- list(names_net)
+contConfusion <- 1
+for (net in networks_filtred) {
+  confusion_matrix[[contConfusion]] <- compareNetworks(goldSatndardMatrix, net)
+  contConfusion <- contConfusion + 1
+}
+names(confusion_matrix) <- names_net
+fileR <- paste0(pathOut,"confusion_matrix.RData")
+writeRData(confusion_matrix, fileR)
+remove(fileR, contConfusion)
 
 

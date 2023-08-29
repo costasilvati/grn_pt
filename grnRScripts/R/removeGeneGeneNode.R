@@ -3,10 +3,12 @@ removeGeneGeneNode <- function(tfList, netOrig, writeData = FALSE, pathOut = "."
   valid_names <- c(tfList[[1]])
   net <- as.matrix(netOrig)
   
-  for (nome in valid_names) {
-      idx <- which(rownames(net) == nome | colnames(net) == nome)
-      net[idx, ] <- 0
-      net[,idx] <- 0
+  for (row_name in rownames(net)) {
+    for (col_name in colnames(net)) {
+      if (net[row_name, col_name] == 1 && !(row_name %in% valid_names) && !(col_name %in% valid_names)) {
+        net[row_name, col_name] <- 0
+      }
+    }
   }
   message(paste((sum(net == 1)),"Node found after TF filter"))
   if(writeData){
