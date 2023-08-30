@@ -1,5 +1,5 @@
 runClr <- function(dataExpression,writeCsv = FALSE, pathOut = "."){
-  mim <- minet::build.mim(dataExpression)
+  mim <- minet::build.mim(dataExpression, disc=)
   net <- minet::clr(mim)
   if(writeCsv){
     #fileName <- paste0(pathOut,"clr_predicted_original.csv")

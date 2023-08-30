@@ -61,7 +61,7 @@ for (net in networks) {
   namesT <- NULL
   t <- 1
   tempList <- list()
-  while (minThreshold <= 2.0) {
+  while (minThreshold <= 1.0) {
     message(paste(nameList,minThreshold))
     tempList[paste0(nameList,minThreshold)] <- edgeMatrixByTreshold(net,minThreshold,writeData = TRUE)
     minThreshold <- minThreshold + 0.1
