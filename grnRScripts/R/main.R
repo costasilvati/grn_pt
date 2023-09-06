@@ -31,13 +31,13 @@ library(igraph)
 
 #---------
 
-pathFile = "/Volumes/SD128/GRN_PT/DREAM5_NetworkInferenceChallenge_Data/Network3_Data/Network3_expression_data.tsv"
-pathFileTf = "/Volumes/SD128/GRN_PT/DREAM5_NetworkInferenceChallenge_Data/Network3_Data/Network3_transcription_factors.tsv"
+pathFile = "C:\Users\jujuc\OneDrive\Doutorado\Redes_PT\Network3_expression_data.tsv"
+pathFileTf = "C:\Users\jujuc\OneDrive\Doutorado\Redes_PT\Network3_transcription_factors.tsv"
 pathFileGoldSt <- "/Volumes/SD128/GRN_PT/DREAM5_NetworkInference_GoldStandard/DREAM5_NetworkInference_GoldStandard_Network3.tsv"
-pathOut = "/Volumes/SD128/GRN_PT/netDream5Net3/"
+pathOut = "E:\Doutorado\resultsDream5Net3\"
 #----------- Lendo os dados de expressão e goldStandard --------------------------
 expressionData <- read.delim(pathFile)
-writeRData(expressionData, paste0(pathOut,"expressionData.RData")) #
+writeRData(expressionData, paste0(pathOut,"expressionData.RData"))
 tfList <- read_csv(pathFileTf, col_names = FALSE)
 #-------- Inferir redes 
 networks <- inferenceNetwork(expressionData, TRUE, pathOut)
