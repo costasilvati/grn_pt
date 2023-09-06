@@ -28,6 +28,8 @@ library(tidyverse)
 library(tibble)
 library(minet)
 library(igraph)
+library(stringr)
+library(corto)
 
 #---------
 
@@ -47,7 +49,7 @@ networks <- inferenceNetwork(expressionData, TRUE, pathOut)
 # remove(data)
 
 # Filtrar pelo quartil 75%
-networks_filtred <- filterListNetwork(networks, TRUE, pathOut)
+#networks_filtred <- filterListNetwork(networks, TRUE, pathOut)
 
 # Gerar vários filtros
 names_net <- names(networks)
@@ -56,48 +58,23 @@ netThresolds <- names(names_net)
 i <- 1
 for (net in networks) {
   minThreshold <- min(net)
-  maxThreshold <- max(net)
   nameList <- names_net[i]
   namesT <- NULL
   t <- 1
   tempList <- list()
   while (minThreshold <= 1.0) {
-    message(paste(nameList,minThreshold))
-    tempList[paste0(nameList,minThreshold)] <- edgeMatrixByTreshold(net,minThreshold,writeData = TRUE)
+    message(paste(nameList," filter by threshold: ",minThreshold))
+    netF <- edgeMatrixByTreshold(net,minThreshold,writeData = TRUE)
+    message(paste(nameList," removing gene-gene connections"))
+    tempList[paste0(nameList,minThreshold)] <- removeGeneGeneNode2(tfList,netF,FALSE)
     minThreshold <- minThreshold + 0.1
     t <- t+1
   }
   netThresolds[[nameList]] <- tempList
   i <- i+1
 }
-remove(i,t,tempList, minThreshold, maxThreshold, namesT)
+remove(i,t,tempList, minThreshold, namesT)
 
-
-networks_filtred_tf <- list(names_net)
-cont <- 1
-cont2 <- 1
-for (nets in netThresolds) {
-  message(names_net[cont])
-  netTemp <- list()
-  cont2 <- 1
-  for (netF in nets) {
-    netTemp[[cont2]] <- removeGeneGeneNode(tfList,
-                                          netF,
-                                          FALSE)
-    cont2 <- cont2 + 1
-  }
-  #netTemp <- names(nets)
-  networks_filtred_tf[[cont]] <- netTemp
-  cont <- cont + 1 
-}
-names(networks_filtred_tf) <- names_net 
-remove(cont)
-remove(cont2) # 15:20
-remove(names_net)
-remove(net)
-remove(netF)
-remove(networks_filtred)
-remove(net_only_TfGene)
 #------- 
 goldStandardTranscFactor <- read.delim(pathFileTf)
 writeRData(goldStandardTranscFactor, paste0(pathOut,
