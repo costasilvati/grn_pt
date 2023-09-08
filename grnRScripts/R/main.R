@@ -1,35 +1,6 @@
 setwd("grnRScripts/R/")
-
-source("readExpressionData.R")
-source("runAracne.R")
-source("runBc3Net.R")
-source("runC3net.R")
-source("runClr.R")
-source("runEnnet.R")
-source("runMrnet.R")
-source("runMrnetB.R")
-source("inferenceNetwork.R")
-source("writeRData.R")
-source("writeNetworkCsv.R")
-source("inferenceNetwork.R")
-source("quantileByData.R")
-source("removeGeneGeneNode.R")
-source("edgeMatrixByTreshold.R")
-library(bc3net)
-library(c3net)
-library(wrMisc)
-library(Matrix)
-library(readr)
-library(dplyr)
-library(minet)
-library(ennet)
-library(netdiffuseR)
-library(tidyverse)
-library(tibble)
-library(minet)
-library(igraph)
-library(stringr)
-library(corto)
+source("loadAll.R")
+loadAll()
 
 #---------
 
@@ -73,7 +44,7 @@ for (net in networks) {
   netThresolds[[nameList]] <- tempList
   i <- i+1
 }
-remove(i,t,tempList, minThreshold, namesT)
+remove(i,t,tempList, minThreshold, namesT, netF, net)
 
 #------- 
 goldStandardTranscFactor <- read.delim(pathFileTf)
@@ -83,7 +54,7 @@ writeRData(goldStandardTranscFactor, paste0(pathOut,
 # ------ Lendo lista de nós Gold Standard e convertendo em matrix ---------------------
 goldStandard <- read.delim(pathFileGoldSt, 
                            header = FALSE) # edge list
-
+writeRData(goldStandard, paste0(pathOut,"goldStandard.RData"))
 # -- create matriz to gold standard data
 goldSatndardMatrix <- matrix(data = 0, 
                              nrow = 4511, 

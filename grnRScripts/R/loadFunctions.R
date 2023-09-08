@@ -1,0 +1,17 @@
+loadFunctions <- function(){
+  source("readExpressionData.R")
+  source("runAracne.R")
+  source("runBc3Net.R")
+  source("runC3net.R")
+  source("runClr.R")
+  source("runEnnet.R")
+  source("runMrnet.R")
+  source("runMrnetB.R")
+  source("inferenceNetwork.R")
+  source("writeRData.R")
+  source("writeNetworkCsv.R")
+  source("inferenceNetwork.R")
+  source("quantileByData.R")
+  source("removeGeneGeneNode.R")
+  source("edgeMatrixByTreshold.R")
+}
