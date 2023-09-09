@@ -10,12 +10,12 @@ edgeMatrixByTreshold <- function(network, thresholdNet = 0.0, writeData = FALSE,
         . <= thresholdNet ~ 0)))
   )
   if(writeData){
-    #fileName <- paste0(pathOut,"aracne_predicted_original.csv")
+    #fileName <- paste0(pathOut,"threshold",thresholdNet,".csv")
     #writeNetworkCsv(net, fileName)
-    fileR = paste0(pathOut,"threshold.RData")
+    fileR = paste0(pathOut,thresholdNet,"_threshold.RData")
     writeRData(net2, fileR)
   }
-  message(paste((sum(net2 == 1)),"Node found."))
+  message(paste((sum(net2 == 1)),"connections found."))
   remove(net_df)
   remove(colunas)
   return(net2)

@@ -7,49 +7,11 @@ loadAll()
 pathFile = "C:\Users\jujuc\OneDrive\Doutorado\Redes_PT\Network3_expression_data.tsv"
 pathFileTf = "C:\Users\jujuc\OneDrive\Doutorado\Redes_PT\Network3_transcription_factors.tsv"
 pathFileGoldSt <- "/Volumes/SD128/GRN_PT/DREAM5_NetworkInference_GoldStandard/DREAM5_NetworkInference_GoldStandard_Network3.tsv"
-pathOut = "E:\Doutorado\resultsDream5Net3\"
-#----------- Lendo os dados de expressão e goldStandard --------------------------
+pathOut = "/Volumes/SD128/GRN_PT/netDream5Net3/"
+#----------- Lendo os dados de expressão e goldStandard -------------
 expressionData <- read.delim(pathFile)
 writeRData(expressionData, paste0(pathOut,"expressionData.RData"))
 tfList <- read_csv(pathFileTf, col_names = FALSE)
-#-------- Inferir redes 
-networks <- inferenceNetwork(expressionData, TRUE, pathOut)
-#--------  ou importar RData
-# load("/Volumes/SD128/GRN_PT/netDream5Net3/listAllNetworks_predicted_predicted.RData")
-# networks <- data
-# remove(data)
-
-# Filtrar pelo quartil 75%
-#networks_filtred <- filterListNetwork(networks, TRUE, pathOut)
-
-# Gerar vários filtros
-names_net <- names(networks)
-netThresolds <- list()
-netThresolds <- names(names_net)
-i <- 1
-for (net in networks) {
-  minThreshold <- min(net)
-  nameList <- names_net[i]
-  namesT <- NULL
-  t <- 1
-  tempList <- list()
-  while (minThreshold <= 1.0) {
-    message(paste(nameList," filter by threshold: ",minThreshold))
-    netF <- edgeMatrixByTreshold(net,minThreshold,writeData = TRUE)
-    message(paste(nameList," removing gene-gene connections"))
-    tempList[paste0(nameList,minThreshold)] <- removeGeneGeneNode2(tfList,netF,FALSE)
-    minThreshold <- minThreshold + 0.1
-    t <- t+1
-  }
-  netThresolds[[nameList]] <- tempList
-  i <- i+1
-}
-remove(i,t,tempList, minThreshold, namesT, netF, net)
-
-#------- 
-goldStandardTranscFactor <- read.delim(pathFileTf)
-writeRData(goldStandardTranscFactor, paste0(pathOut,
-                                  "goldStandardTranscFactor.RData"))
 
 # ------ Lendo lista de nós Gold Standard e convertendo em matrix ---------------------
 goldStandard <- read.delim(pathFileGoldSt, 

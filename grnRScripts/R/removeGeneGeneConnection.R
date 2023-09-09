@@ -1,25 +1,17 @@
-removeGeneGeneNode <- function(tfList, netOrig, writeData = FALSE, pathOut = "."){
-  #message(paste((sum(netOrig == 1)),"Node found before TF filter"))
-  valid_names <- c(tfList[[1]])
-  net <- as.matrix(netOrig)
-  
-  for (row_name in rownames(net)) {
-    for (col_name in colnames(net)) {
-      if (net[row_name, col_name] == 1 && !(row_name %in% valid_names) && !(col_name %in% valid_names)) {
-        net[row_name, col_name] <- 0
-      }
-    }
-  }
-  message(paste((sum(net == 1)),"Node found after TF filter"))
+# Pattern output name: pathOut + _ + tool + threshold + filtred_geneGene.RData
+removeGeneGeneConnection <- function(tfList, netOrig, writeData = FALSE, pathOut = "."){
+  nos_na_lista <- colnames(netOrig) %in% tfList
+  netOrig[!nos_na_lista, !nos_na_lista] <- 0
+  message(paste((sum(netOrig == 1))," Connection found after TF filter"))
   if(writeData){
     message("Writting data...")
     # fileName <- paste0(pathOut,"filtred_geneGene.csv")
-    # writeNetworkCsv(net, fileName)
+    # writeNetworkCsv(netOrig, fileName)
     fileR = paste0(pathOut,"filtred_geneGene.RData")
-    writeRData(net, fileR)
+    writeRData(netOrig, fileR)
     remove(fileR)
   }
-  return(net)
+  #return(net)
 }
 
 removeGeneGeneNode2 <- function(tfList, netOrig, writeData = FALSE, pathOut = ".") {

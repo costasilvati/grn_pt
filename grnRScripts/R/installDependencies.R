@@ -18,7 +18,10 @@ installDependencies <- function(){
                "tidyverse", 
                "tibble", 
                "igraph", 
-               "stringr")
+               "stringr",
+               "progress"
+               #,"ennet"
+               )
   
   # Verifique se cada pacote está instalado e instale-o se não estiver
   for (cranPck in CranPackages) {

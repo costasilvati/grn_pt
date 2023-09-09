@@ -1,6 +1,4 @@
 loadPackages <- function(){
-
-
   dependenciesPakcage = c("corto", 
                            "stringr",
                            "bc3net",
@@ -14,7 +12,9 @@ loadPackages <- function(){
                            "minet",
                            "tibble",
                            "igraph",
-                          "ennet")
+                          "progress"
+                          #,"ennet"
+                          )
   invisible(lapply(dependenciesPakcage , library, character.only = TRUE))
   remove(dependenciesPakcage)
 }
