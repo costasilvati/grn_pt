@@ -15,7 +15,7 @@ edgeMatrixByTreshold <- function(network, thresholdNet = 0.0, writeData = FALSE,
     fileR = paste0(pathOut,thresholdNet,"_threshold.RData")
     writeRData(net2, fileR)
   }
-  message(paste((sum(net2 == 1)),"connections found."))
+  cat("\t",sum(net2 == 1),"connections found.\n")
   remove(net_df)
   remove(colunas)
   return(net2)
