@@ -115,7 +115,14 @@ for(f in files){
 }
 remove(files, f, i)
 # ------------- Gerar rede consenso ------------------
-netConsenso <- consensus(networks = networksBest, goldStndardMatrix, namesCol, writeData = TRUE)
+for (i in 1:length(networksBest)) {
+  netConsenso[i] <- consensus(networks = networksBest, 
+                              gold =  goldStndardMatrix, 
+                              namesCol = namesCol,
+                              minConsenso = i, 
+                              writeData = FALSE)
+}
+
 
 write.csv(netConsenso$net, file=paste0(pathOut,"consensusNet.csv"))
 

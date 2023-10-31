@@ -9,7 +9,7 @@ loadFunctions <- function(){
   source("runMrnetB.R")
   #source("EnNET.R")
   source("runGENIE3.R")
-  source("runCorto.R")
+  #source("runCorto.R")
   source("inferenceNetwork.R")
   source("writeRData.R")
   source("writeNetworkCsv.R")
