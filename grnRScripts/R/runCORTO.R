@@ -8,7 +8,7 @@
 # >tfs <- as.character(unlist(tfs))
 
 runCorto <- function(dataExpression, tfList, writeCsv=FALSE, pathOut="."){
-  regulon<-corto(dataExpression,centroids=tfList)
+  regulon<-corto(dataExpression,centroids=c(tfList$X1),nbootstraps=10,p=1e-30,nthreads=2)
   net <- create_and_populate_matrix(dataExpression,regulon)
   if(writeCsv){
     fileR = paste0(pathOut,"CORTO_predicted_original.RData")
@@ -16,8 +16,6 @@ runCorto <- function(dataExpression, tfList, writeCsv=FALSE, pathOut="."){
     writeRData(net, fileR)
   }
   return(net)
-
-
 }
 
 create_and_populate_matrix <- function(dataExpression,regulon){

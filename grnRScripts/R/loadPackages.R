@@ -13,11 +13,10 @@ loadPackages <- function(){
                            "tibble",
                            "igraph",
                           "progress",
-                          "pROC",
                           "GENIE3",
                           "doRNG",
-                          "pracma"
-                          #,"ennet"
+                          "pracma",
+                          "ennet"
                           )
   invisible(lapply(dependenciesPakcage , library, character.only = TRUE))
   remove(dependenciesPakcage)

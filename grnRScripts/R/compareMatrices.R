@@ -1,15 +1,21 @@
 # Função para calcular métricas de comparação de matrizes
-compareMatrices <- function(net, gold, toolName, threshold) {
+compareMatrices <- function(net, gold, toolName, threshold,maxRecords) {
   # Verifica se as matrizes têm as mesmas dimensões
   if (!identical(dim(net), dim(gold))) {
     stop("As matrizes net e gold devem ter as mesmas dimensões")
   }
   
-  # Calcula os valores de FP, FN, TP e TN
-  fp <- sum(net & !gold)
-  fn <- sum(!net & gold)
-  tp <- sum(net & gold)
-  tn <- sum(!net & !gold)
+  # Limite o número de registros a serem comparados
+  num_records <- min(maxRecords, nrow(net) * ncol(net))
+  
+  # Máscara para o triângulo superior
+  upper_triangle <- upper.tri(net)
+  
+  # Aplicar a máscara e calcular TP, FP, TN e FN usando operações de soma bit a bit
+  tp <- sum(net[upper_triangle] & gold[upper_triangle])
+  fp <- sum(net[upper_triangle] & !gold[upper_triangle])
+  tn <- sum(!net[upper_triangle] & !gold[upper_triangle])
+  fn <- sum(!net[upper_triangle] & gold[upper_triangle])
   # Calcula as métricas de desempenho
   accuracy <- (tp + tn) / (tp + tn + fp + fn)
   recall <- tp / (tp + fn) # == TPR
@@ -34,4 +40,5 @@ compareMatrices <- function(net, gold, toolName, threshold) {
   )
   return(results)
 }
+
 

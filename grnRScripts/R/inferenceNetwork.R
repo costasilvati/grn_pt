@@ -1,11 +1,11 @@
-inferenceNetwork <- function(expressionData, writeData = FALSE, pathOut = "."){
+inferenceNetwork <- function(expressionData, tfList, writeData = FALSE, pathOut = "."){
   # -- gera matriz transposta
   expressionDataTransposto <- t(expressionData)
   colnames(expressionDataTransposto) <- rep(1:length(row.names(expressionData)))
   #--- discretizar para métodos MI  # default do infotheo função discretize()
   cat("Executing unsupervised data discretization...\n")
   expressionTranspDiscret <- infotheo::discretize(expressionDataTransposto)
-  cat("Executing NetBc3...\n")
+  cat("Executing Bc3Net...\n")
   netBc3 <- runBc3Net(expressionDataTransposto,writeData, pathOut)
   cat("Executing NetC3...\n")
   netC3 <- runC3net(expressionTranspDiscret, writeData, pathOut)
@@ -19,8 +19,12 @@ inferenceNetwork <- function(expressionData, writeData = FALSE, pathOut = "."){
   netMrnetB <- runMrnetB(expressionTranspDiscret, writeData, pathOut)
   cat("Executing MRNetB...\n")
   netGENIE3 <- runGENIE3(expressionTranspDiscret, writeData, pathOut)
-  networks <- list(netBc3, netC3, netAracne, netClr, netMrnet, netMrnetB, netGENIE3)
-  names(networks) <- c("BC3", "C3NET", "ARACNE", "CLR", "mrnet", "mrnetB", "GENIE3")
+  # cat("Executing ENNET...\n")
+  # netEnNET <- runEnNET(expressionTranspDiscret, writeData, pathOut)
+  cat("Executing CORTO...")
+  netCorto <- runCorto(expressionDataTransposto, tfList, writeData, pathOut)
+  networks <- list(netBc3, netC3, netAracne, netClr, netMrnet, netMrnetB, netGENIE3, netCorto,netEnNET)
+  names(networks) <- c("BC3", "C3NET", "ARACNE", "CLR", "mrnet", "mrnetB", "GENIE3","Corto", "EnNET")
   
   if(writeData){
     cat("Writting data...\n")
@@ -30,6 +34,6 @@ inferenceNetwork <- function(expressionData, writeData = FALSE, pathOut = "."){
     writeRData(networks, fileR)
     remove(fileR)
   }
-  remove(netBc3, netC3, netAracne, netClr, netMrnet, netMrnetB)
+  remove(netBc3, netC3, netAracne, netClr, netMrnet, netMrnetB, netGENIE3, netCorto)
   return(networks)
 }

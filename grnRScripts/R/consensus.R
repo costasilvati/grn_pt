@@ -11,7 +11,8 @@ consensus <- function(networks, gold, namesCol, minConsenso = 3, writeData = TRU
                                nrow = (length(networks)),
                                ncol = length(namesCol)))
   cat("After consider ", minConsenso, "tools apointments. Number of Connections: ", sum(matriz_consenso == 1), "\n")
-  resultsCons <- compareMatrices(matriz_consenso, gold, minConsenso, NaN)
+  resultsCons <- compareMatrices(net= matriz_consenso, gold= gold, toolName=minConsenso, maxRecords= 10000, threshold = NaN)
+  cat("numTools:",minConsenso,"F-Score", resultsCons[1,11],"\n")
   if(writeData){
     writeRData(matriz_consenso, paste0(pathOut, "netConsenso.RData"))
   }

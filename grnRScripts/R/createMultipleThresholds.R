@@ -5,7 +5,8 @@ createMultipleThresholds <- function(networks,
                                       tfList, 
                                       nSteps = 10,
                                       namesCol = c("fp","fn","tp","tn","accuracy","recall","precision","specificity","f_score","fdr", "AUPR", "AUC"),
-                                      writeData=FALSE, 
+                                     max_records = 10000, 
+                                     writeData=FALSE, 
                                       pathOut = "."){
   names_net <- names(networks)
   results <- data.frame(matrix(0, 
@@ -15,6 +16,7 @@ createMultipleThresholds <- function(networks,
                         )
   i <- 1
   countRow <- 1
+  #networksClean <- list()
   for (net in networks) {
     # -- remove connections < threshold
     minThreshold <- min(net)
@@ -42,10 +44,12 @@ createMultipleThresholds <- function(networks,
                                                   nameList,
                                                   "_",
                                                   round(minThreshold, digits = 4)))
+      #networksClean[[paste0(nameList,"_",t,"_",minThreshold)]] <- netClean
       results[countRow,] <- compareMatrices(netClean, 
                                             goldNet, 
                                             nameList, 
-                                            minThreshold)
+                                            minThreshold,
+                                            maxRecords = max_records)
       minThreshold <- minThreshold + incrementValue
       countRow <- countRow + 1
       t <- t+1
@@ -54,5 +58,7 @@ createMultipleThresholds <- function(networks,
   }
   names(results) <- namesCol
   remove(names_net, minThreshold, nameList, namesT, i, t)
+  #data <- list(results, networksClean)
+  #return(data)
   return(results)
 }

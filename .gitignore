@@ -133,3 +133,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 .Rproj.user
+._.DS_Store
+.DS_Store

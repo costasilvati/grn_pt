@@ -7,9 +7,9 @@ loadFunctions <- function(){
   source("runEnnet.R")
   source("runMrnet.R")
   source("runMrnetB.R")
-  #source("EnNET.R")
+  source("runEnNET.R")
   source("runGENIE3.R")
-  #source("runCorto.R")
+  source("runCORTO.R")
   source("inferenceNetwork.R")
   source("writeRData.R")
   source("writeNetworkCsv.R")
@@ -20,4 +20,6 @@ loadFunctions <- function(){
   source("compareMatrices.R")
   source("createMultipleThresholds.R")
   source("mergeAdjacencyMatrices.R")
+  source("listToMatrix.R")
+  source("consensus.R")
 }
